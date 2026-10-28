@@ -251,8 +251,10 @@ class Run:
 
     def find_main_post(self, t):
         """Trend / news / market without a tweet: spend 1 Sorsa request to find the post to quote."""
-        if "/status/" in (t.get("main_url") or "") or not t.get("x_query") or not self.sorsa.enabled:
+        if "/status/" in (t.get("main_url") or "") or not t.get("x_query") or not self.sorsa.enabled \
+                or t.get("mainpost_tried"):
             return
+        t["mainpost_tried"] = True
         res = self.guarded("x_mainpost", lambda: self.sorsa.search(
             f"{t['x_query']} min_faves:200 -filter:replies", order="popular"))
         tweets = [tweet_item(x, "mainpost") for x in (res or {}).get("tweets") or []]
@@ -272,13 +274,13 @@ class Run:
                 break
             self.find_main_post(t)
             if self.args.dry or not (self.tg_token and self.tg_chats):
-                print("\n--- ALERT ---\n" + telegram.alert_text(t))
+                # nothing was sent, so leave the topic eligible for when Telegram is configured
+                print("\n--- ALERT (not sent) ---\n" + telegram.alert_text(t))
                 print("buttons:", json.dumps(telegram.alert_buttons(t, self.feed_url), ensure_ascii=False)[:400])
-            else:
-                if self.guarded("telegram", lambda t=t: telegram.send_alert(self.tg_token, self.tg_chats, t,
-                                                                            self.feed_url)) is None \
-                        and "telegram" in self.state["errors"]:
-                    break
+                continue
+            self.guarded("telegram", lambda t=t: telegram.send_alert(self.tg_token, self.tg_chats, t, self.feed_url))
+            if "telegram" in self.state["errors"]:
+                break
             t["alerted_at"] = self.now
             self.state["alerts"].append(self.now)
             sent += 1
