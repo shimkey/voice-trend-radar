@@ -1,0 +1,6 @@
+data/
+_preview/
+__pycache__/
+*.pyc
+.env*
+web/fonts/

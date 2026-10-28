@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>VOICE Radar</title>
+<link rel="icon" href="favicon.ico">
+<style>
+@font-face { font-family: 'Sohne Breit'; src: url('fonts/sohne-breit-kraftig.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Sohne Breit'; src: url('fonts/sohne-breit-dreiviertelfett.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+:root {
+  --bg: #0d0b11; --bg-2: #16161f; --card: #14121a; --line: rgba(255,255,255,.08);
+  --pink: #ca6cef; --pink-10: rgba(202,108,239,.1); --pink-25: rgba(202,108,239,.25);
+  --green: #79ff9a; --peach: #ef9c6c; --red: #ef6c6c;
+  --w: #fff; --w60: rgba(255,255,255,.6); --w40: rgba(255,255,255,.4); --w10: rgba(255,255,255,.1);
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Inter", sans-serif;
+  --head: 'Sohne Breit', var(--sans);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--w); font: 15px/1.45 var(--sans); -webkit-text-size-adjust: 100%; }
+a { color: inherit; }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 16px calc(40px + env(safe-area-inset-bottom)); }
+header .wrap { padding-bottom: 0; }
+header { position: sticky; top: 0; z-index: 5; background: rgba(13,11,17,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding: 14px 0 10px; }
+.logo { font: 700 20px/1 var(--head); letter-spacing: .02em; }
+.logo span { color: var(--pink); font-weight: 600; font-size: 13px; letter-spacing: .14em; margin-left: 8px; }
+.status { font-size: 12px; color: var(--w60); text-align: right; }
+.status b { color: var(--green); font-weight: 600; }
+.status.stale b { color: var(--red); }
+.row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 10px; scrollbar-width: none; }
+.row::-webkit-scrollbar { display: none; }
+.pill { flex: none; border: 1px solid var(--w10); background: transparent; color: var(--w60); border-radius: 999px; padding: 7px 13px; font: 600 13px/1 var(--sans); cursor: pointer; }
+.pill.on { background: var(--pink); border-color: var(--pink); color: #120a17; }
+.pill.cat.on { background: var(--pink-10); color: var(--pink); border-color: var(--pink-25); }
+.note { margin: 14px 0 0; padding: 10px 12px; border-radius: 14px; background: rgba(239,156,108,.08); border: 1px solid rgba(239,156,108,.25); color: var(--peach); font-size: 13px; }
+.list { display: grid; gap: 12px; margin-top: 14px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 22px; padding: 16px; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 12px; color: var(--w60); }
+.score { font: 700 12px/1 var(--sans); padding: 5px 8px; border-radius: 999px; background: var(--pink-10); color: var(--pink); }
+.score.hot { background: var(--pink); color: #120a17; }
+.cat-tag { text-transform: uppercase; letter-spacing: .08em; font-weight: 600; color: var(--w); }
+.dot::before { content: "·"; margin-right: 8px; color: var(--w40); }
+h2 { font: 600 17px/1.3 var(--head); margin: 10px 0 6px; letter-spacing: .005em; }
+.why { color: rgba(255,255,255,.82); margin: 0 0 8px; }
+.signals { font-size: 12.5px; color: var(--w60); margin: 0 0 10px; }
+.signals span + span::before { content: " · "; color: var(--w40); }
+.media { display: block; width: 100%; max-height: 220px; object-fit: cover; border-radius: 14px; margin: 4px 0 10px; background: var(--bg-2); }
+.box { border-radius: 14px; background: var(--bg-2); padding: 10px 12px; margin-top: 8px; position: relative; }
+.box .lbl { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--pink); font-weight: 700; margin-bottom: 3px; }
+.box .txt { padding-right: 34px; white-space: pre-wrap; }
+.box .opts { color: var(--w60); font-size: 13px; margin-top: 3px; }
+.copy { position: absolute; top: 8px; right: 8px; border: 0; background: var(--w10); color: var(--w); border-radius: 9px; width: 30px; height: 30px; cursor: pointer; font-size: 14px; }
+.copy.done { background: var(--green); color: #0d0b11; }
+.acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.btn { flex: 1 1 auto; text-align: center; text-decoration: none; padding: 11px 14px; border-radius: 999px; font: 700 13.5px/1 var(--sans); border: 1px solid var(--w10); color: var(--w); }
+.btn.main { background: var(--pink); border-color: var(--pink); color: #120a17; }
+.items { margin-top: 10px; font-size: 12.5px; color: var(--w60); }
+.items summary { cursor: pointer; }
+.items a { display: block; padding: 4px 0; text-decoration: none; border-top: 1px solid var(--line); }
+.empty { color: var(--w60); text-align: center; padding: 48px 0; }
+@media (max-width: 420px) { h2 { font-size: 16px; } .card { padding: 14px; border-radius: 18px; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top"><div class="logo">VOICE<span>RADAR</span></div><div class="status" id="status">загрузка</div></div>
+    <div class="row" id="windows"></div>
+    <div class="row" id="cats"></div>
+  </div>
+</header>
+<main class="wrap">
+  <div id="note"></div>
+  <div class="list" id="list"></div>
+</main>
+<script>window.RADAR_FEED = 'https://raw.githubusercontent.com/shimkey/voice-trend-radar/data/feed.json';</script>
+<script>
+// Where feed.json lives. ?data=<url> overrides (handy for local testing).
+const FEED_URL = new URLSearchParams(location.search).get('data') || window.RADAR_FEED || 'feed.json';
+const WINDOWS = [['1h', 1, '1 час'], ['6h', 6, '6 часов'], ['12h', 12, '12 часов'], ['24h', 24, 'сутки'], ['7d', 168, 'неделя']];
+const CATS = [['all', 'Все'], ['crypto', 'Крипта'], ['world', 'Мир'], ['tech_ai', 'AI'], ['culture', 'Культура'], ['other', 'Остальное']];
+const CAT_GROUP = { crypto: 'crypto', solana: 'crypto', memecoins: 'crypto', markets: 'crypto', politics: 'world', world: 'world', tech_ai: 'tech_ai', culture: 'culture', sports: 'other', other: 'other' };
+const CAT_LABEL = { crypto: 'крипта', solana: 'solana', memecoins: 'мемкоины', markets: 'рынки', politics: 'политика', world: 'мир', tech_ai: 'ai / тех', culture: 'культура', sports: 'спорт', other: 'другое' };
+const SRC = { x: 'X', cluster: 'X · волна', trend: 'тренды X', polymarket: 'Polymarket', coingecko: 'CoinGecko', news: 'новости' };
+const store = {
+  get(k, d) { try { return localStorage.getItem(k) || d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+};
+let state = { win: store.get('radar.win', '6h'), cat: store.get('radar.cat', 'all') };
+let feed = null;
+
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === 'class') n.className = v; else if (k.startsWith('on')) n.addEventListener(k.slice(2), v); else if (v != null) n.setAttribute(k, v);
+  }
+  for (const k of kids.flat()) if (k != null && k !== false) n.append(typeof k === 'string' || typeof k === 'number' ? String(k) : k);
+  return n;
+};
+const ago = ts => {
+  const m = Math.max(0, (Date.now() / 1000 - ts) / 60);
+  if (m < 1) return 'только что';
+  if (m < 60) return Math.round(m) + ' мин назад';
+  if (m < 48 * 60) return Math.round(m / 60) + ' ч назад';
+  return Math.round(m / 1440) + ' дн назад';
+};
+const quoteUrl = (text, url) => 'https://x.com/intent/post?' + new URLSearchParams(url ? { text: text || '', url } : { text: text || '' });
+
+function copyBtn(text) {
+  const b = el('button', { class: 'copy', title: 'Скопировать', 'aria-label': 'Скопировать' }, '⧉');
+  b.addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText(text); } catch (e) {
+      const t = el('textarea'); t.value = text; document.body.append(t); t.select(); document.execCommand('copy'); t.remove();
+    }
+    b.classList.add('done'); b.textContent = '✓'; setTimeout(() => { b.classList.remove('done'); b.textContent = '⧉'; }, 1400);
+  });
+  return b;
+}
+
+function card(t) {
+  const isTweet = t.main_url && t.main_url.includes('/status/');
+  const pollText = t.poll_question ? t.poll_question + (t.poll_options && t.poll_options.length ? '\n' + t.poll_options.join(' / ') : '') : '';
+  return el('article', { class: 'card' },
+    el('div', { class: 'meta' },
+      el('span', { class: 'score' + (t.relevance >= 8 ? ' hot' : '') }, t.relevance + '/10'),
+      el('span', { class: 'cat-tag' }, CAT_LABEL[t.category] || t.category),
+      el('span', { class: 'dot' }, t.sources.map(s => SRC[s] || s).join(' + ')),
+      el('span', { class: 'dot' }, ago(t.first_seen)),
+      t.alerted_at ? el('span', { class: 'dot' }, 'в телеге') : null),
+    el('h2', {}, t.title),
+    t.why ? el('p', { class: 'why' }, t.why) : null,
+    t.signals && t.signals.length ? el('p', { class: 'signals' }, t.signals.slice(0, 3).map(s => el('span', {}, s))) : null,
+    t.media && t.media[0] ? el('img', { class: 'media', src: t.media[0], loading: 'lazy', alt: '' }) : null,
+    t.poll_question ? el('div', { class: 'box' }, el('div', { class: 'lbl' }, 'опрос для Social Camp'),
+      el('div', { class: 'txt' }, t.poll_question), t.poll_options && t.poll_options.length ? el('div', { class: 'opts' }, t.poll_options.join(' / ')) : null, copyBtn(pollText)) : null,
+    t.qt ? el('div', { class: 'box' }, el('div', { class: 'lbl' }, 'черновик QT'), el('div', { class: 'txt' }, t.qt), copyBtn(t.qt)) : null,
+    el('div', { class: 'acts' },
+      isTweet ? el('a', { class: 'btn main', href: quoteUrl(t.qt, t.main_url), target: '_blank', rel: 'noopener' }, 'Квотнуть') : null,
+      isTweet ? el('a', { class: 'btn', href: t.main_url, target: '_blank', rel: 'noopener' }, 'Открыть пост') : null,
+      !isTweet && t.main_url ? el('a', { class: 'btn', href: t.main_url, target: '_blank', rel: 'noopener' }, 'Источник') : null,
+      t.search_url ? el('a', { class: 'btn' + (isTweet ? '' : ' main'), href: t.search_url, target: '_blank', rel: 'noopener' }, 'Топ в X') : null),
+    t.items && t.items.length > 1 ? el('details', { class: 'items' }, el('summary', {}, 'Источники: ' + t.items.length),
+      t.items.map(i => i.url ? el('a', { href: i.url, target: '_blank', rel: 'noopener' }, (SRC[i.source] || i.source) + ': ' + (i.author ? '@' + i.author + ' ' : '') + i.title) : null)) : null
+  );
+}
+
+function render() {
+  const winH = WINDOWS.find(w => w[0] === state.win)[1];
+  document.getElementById('windows').replaceChildren(...WINDOWS.map(([k, , label]) =>
+    el('button', { class: 'pill' + (state.win === k ? ' on' : ''), onclick: () => { state.win = k; store.set('radar.win', k); render(); } }, label)));
+  document.getElementById('cats').replaceChildren(...CATS.map(([k, label]) =>
+    el('button', { class: 'pill cat' + (state.cat === k ? ' on' : ''), onclick: () => { state.cat = k; store.set('radar.cat', k); render(); } }, label)));
+  if (!feed) return;
+  const now = Date.now() / 1000;
+  const topics = feed.topics
+    .filter(t => now - t.last_seen <= winH * 3600)
+    .filter(t => state.cat === 'all' || CAT_GROUP[t.category] === state.cat)
+    .sort((a, b) => b.score - a.score || b.last_seen - a.last_seen);
+  const list = document.getElementById('list');
+  list.replaceChildren(...(topics.length ? topics.map(card) : [el('div', { class: 'empty' }, 'За это окно ничего громкого')]));
+}
+
+function renderHealth() {
+  const h = feed.health || {};
+  const age = (Date.now() / 1000 - feed.updated_at) / 60;
+  const s = document.getElementById('status');
+  s.className = 'status' + (age > 30 ? ' stale' : '');
+  const b = h.budget || {};
+  s.replaceChildren('обновлено ', el('b', {}, ago(feed.updated_at)),
+    el('br'), h.x_enabled ? `X: ${b.used || 0}/${h.daily_budget} запросов сегодня` : 'X выключен');
+  const notes = [];
+  if (!h.x_enabled) notes.push('X-слой выключен: нет ключа Sorsa. Сейчас видны только тренды X по странам, Polymarket, CoinGecko и новости.');
+  if (!h.llm_enabled) notes.push('Claude выключен: нет черновиков QT и опросов, релевантность угадывается по ключевым словам.');
+  if (age > 30) notes.push('Радар не обновлялся больше 30 минут, проверь GitHub Actions.');
+  document.getElementById('note').replaceChildren(...notes.map(n => el('p', { class: 'note' }, n)));
+}
+
+async function load() {
+  try {
+    const r = await fetch(FEED_URL + (FEED_URL.includes('?') ? '&' : '?') + 't=' + Math.floor(Date.now() / 60000), { cache: 'no-store' });
+    feed = await r.json();
+    renderHealth();
+  } catch (e) {
+    document.getElementById('status').textContent = 'не удалось загрузить ленту';
+  }
+  render();
+}
+render();
+load();
+setInterval(load, 120000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) load(); });
+</script>
+</body>
+</html>

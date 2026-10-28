@@ -1,0 +1,75 @@
+{
+  "feed_url": "",
+  "sorsa": {
+    "base": "https://api.sorsa.io/v3",
+    "list_id": "",
+    "daily_budget": 320,
+    "every_min": {
+      "list": 10,
+      "firehose": 30,
+      "discovery": 30,
+      "recheck": 20,
+      "usage": 360
+    },
+    "list_pages": 3,
+    "discovery_queries": [
+      "(solana OR memecoin OR pumpfun OR airdrop OR \"crypto twitter\" OR CT) min_faves:800 -filter:replies lang:en",
+      "(bitcoin OR ethereum OR crypto OR stablecoin OR ETF OR SEC) min_faves:2000 -filter:replies lang:en",
+      "(polymarket OR kalshi OR \"hot take\" OR \"unpopular opinion\" OR \"hear me out\") min_faves:1500 -filter:replies lang:en"
+    ]
+  },
+  "trends": {
+    "every_min": 30,
+    "locations": {
+      "worldwide": "",
+      "united-states": "united-states",
+      "united-kingdom": "united-kingdom"
+    },
+    "top_n": 15
+  },
+  "polymarket": { "every_min": 30, "top_n": 40, "move_threshold": 0.15, "min_volume24": 100000 },
+  "coingecko": { "every_min": 30, "top_n": 7 },
+  "news": {
+    "every_min": 15,
+    "feeds": {
+      "CoinDesk": ["crypto", "https://www.coindesk.com/arc/outboundfeeds/rss/"],
+      "Cointelegraph": ["crypto", "https://cointelegraph.com/rss"],
+      "The Block": ["crypto", "https://www.theblock.co/rss.xml"],
+      "Decrypt": ["crypto", "https://decrypt.co/feed"],
+      "Google News": ["world", "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"],
+      "BBC World": ["world", "https://feeds.bbci.co.uk/news/world/rss.xml"],
+      "Guardian World": ["world", "https://www.theguardian.com/world/rss"],
+      "TechCrunch": ["tech_ai", "https://techcrunch.com/feed/"],
+      "The Verge": ["tech_ai", "https://www.theverge.com/rss/index.xml"]
+    },
+    "max_age_h": 12,
+    "min_outlets": 3,
+    "breaking_words": ["hack", "hacked", "exploit", "drained", "sec ", "etf", "lawsuit", "sued", "arrested", "charged", "ban", "bans", "approves", "approved", "launches", "acquire", "acquires", "listing", "delist", "bankrupt", "collapse", "halts", "record high", "all-time high", "crash", "plunge", "surge", "airdrop", "tge", "rug"]
+  },
+  "detect": {
+    "max_age_h": 6,
+    "min_eng": 150,
+    "outperform_x": 3.0,
+    "cold_eng_per_1k_followers": 12,
+    "cluster_window_h": 3,
+    "cluster_min_authors": 3,
+    "cluster_spike_x": 3.0,
+    "max_candidates_per_run": 15
+  },
+  "llm": {
+    "model": "claude-opus-5-5",
+    "effort": "low",
+    "max_tokens": 16000
+  },
+  "alerts": {
+    "min_relevance": 7,
+    "min_relevance_urgent": 6,
+    "min_urgency": 7,
+    "max_per_hour": 6,
+    "realert_after_h": 12,
+    "digest_hours_msk": [10, 19],
+    "digest_window_h": 12,
+    "digest_size": 8
+  },
+  "keep_days": 7
+}

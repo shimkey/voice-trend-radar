@@ -1,0 +1,52 @@
+{
+  "_note": "Who the radar watches on X. 'list' accounts go into the public X List the radar reads in one call (set list_id in config.json). 'firehose' accounts post too often for the list, so the radar only catches their tweets that already blew up (search with min_faves). Handles are from memory, run `python -m radar.verify_watchlist` once Sorsa has credits to drop dead or renamed ones.",
+  "groups": {
+    "crypto_news": {
+      "mode": "list",
+      "why": "first to post crypto breaking news",
+      "handles": ["WatcherGuru", "WuBlockchain", "CoinDesk", "TheBlock__", "decryptmedia", "Cointelegraph", "BitcoinMagazine", "DegenerateNews", "Blockworks_", "solidintel_x", "unfolded"]
+    },
+    "solana": {
+      "mode": "list",
+      "why": "our chain: launches, drama, memecoin meta",
+      "handles": ["solana", "aeyakovenko", "rajgokal", "SolanaFloor", "pumpdotfun", "a1lon9", "JupiterExchange", "weremeow", "phantom", "MagicEden", "heliuslabs", "0xMert_", "Backpack", "armaniferrante", "SuperteamDAO", "solanamobile", "MeteoraAG", "RaydiumProtocol", "DriftProtocol", "jito_sol", "KaminoFinance", "believeapp", "bonk_inu", "tensor_hq"]
+    },
+    "ct_voices": {
+      "mode": "list",
+      "why": "the KOLs whose takes CT argues about",
+      "handles": ["cobie", "blknoiz06", "HsakaTrades", "CryptoKaleo", "inversebrah", "GiganticRebirth", "DegenSpartan", "MustStopMurad", "notthreadguy", "frankdegods", "Pentosh1", "rektcapital", "CryptoDonAlt", "AltcoinGordon", "ThinkingUSD", "0xSisyphus", "CryptoCred", "lightcrypto", "gainzy222", "DefiIgnas", "beaniemaxi", "Cupseyy", "orangie", "theunipcs", "Tree_of_Alpha", "punk6529", "CryptoHayes", "RyanSAdams", "TrustlessState", "hosseeb", "cburniske"]
+    },
+    "industry": {
+      "mode": "list",
+      "why": "founders, exchanges and policy people who move the market",
+      "handles": ["VitalikButerin", "cz_binance", "heyibinance", "brian_armstrong", "jessepollak", "saylor", "APompliano", "RaoulGMI", "balajis", "novogratz", "BarrySilbert", "DavidSacks", "SECGov", "binance", "coinbase", "krakenfx", "HyperliquidX", "ethereum", "base"]
+    },
+    "onchain_intel": {
+      "mode": "list",
+      "why": "hacks, whale moves, rugs: instant drama",
+      "handles": ["zachxbt", "lookonchain", "spotonchain", "EmberCN", "arkham", "bubblemaps", "PeckShieldAlert", "CertiKAlert", "ai_9684xtpa", "whale_alert"]
+    },
+    "opinion_markets": {
+      "mode": "list",
+      "why": "closest to VOICE: what people take sides on, plus SocialFi neighbours",
+      "handles": ["Polymarket", "Kalshi", "shayne_coplan", "KaitoAI", "cookiedotfun", "galxe", "layer3xyz", "Myriad_Markets"]
+    },
+    "tech_ai": {
+      "mode": "list",
+      "why": "AI drops spill into CT within the hour",
+      "handles": ["OpenAI", "AnthropicAI", "sama", "xai", "GoogleDeepMind", "karpathy", "testingcatalog", "rowancheung"]
+    },
+    "firehose_news": {
+      "mode": "firehose",
+      "min_faves": 1500,
+      "why": "world and markets breaking news, hundreds of posts a day",
+      "handles": ["DeItaone", "FirstSquawk", "unusual_whales", "zerohedge", "KobeissiLetter", "tier10k", "MarioNawfal", "BNONews", "spectatorindex", "disclosetv", "Reuters", "AP", "BBCBreaking", "visegrad24", "sentdefender"]
+    },
+    "firehose_culture": {
+      "mode": "firehose",
+      "min_faves": 5000,
+      "why": "global virality: what the whole internet is laughing or fighting about",
+      "handles": ["elonmusk", "realDonaldTrump", "PopBase", "PopCrave", "dexerto", "FearedBuck", "CollinRugg", "historyinmemes", "culturecrave"]
+    }
+  }
+}
