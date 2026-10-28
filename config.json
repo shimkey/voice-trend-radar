@@ -1,5 +1,5 @@
 {
-  "feed_url": "",
+  "feed_url": "https://voice-radar-orpin.vercel.app",
   "sorsa": {
     "base": "https://api.sorsa.io/v3",
     "list_id": "",
